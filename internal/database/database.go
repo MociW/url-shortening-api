@@ -11,11 +11,11 @@ import (
 )
 
 func NewDB(config *viper.Viper) *gorm.DB {
-	username := config.GetString("USERNAME")
-	password := config.GetString("PASSWORD")
-	host := config.GetString("HOST")
+	username := config.GetString("DATABASE_USERNAME")
+	password := config.GetString("DATABASE_PASSWORD")
+	host := config.GetString("DATABASE_HOST")
 	port := config.GetInt("DATABASE_PORT")
-	database := config.GetString("DATABASE")
+	database := config.GetString("DATABASE_NAME")
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", username, password, host, port, database)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{

@@ -83,10 +83,9 @@ func (l *LinkController) Create(c *fiber.Ctx) error {
 
 func (l *LinkController) List(c *fiber.Ctx) error {
 	request := new(ListLinkRequest)
-	err := c.BodyParser(request)
-	if err != nil {
-		return fiber.ErrBadRequest
-	}
+	id := c.Params("user_id")
+
+	request.UserId = id
 
 	cookie := c.Cookies("jwt")
 	token, err := jwt.ParseWithClaims(cookie, &jwt.MapClaims{}, func(t *jwt.Token) (interface{}, error) {

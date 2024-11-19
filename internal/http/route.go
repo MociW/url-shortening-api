@@ -20,9 +20,11 @@ func (route *RouteConfig) NewRouter() *fiber.App {
 	app.Post("/v1/users/_logout", route.UserController.Logout)
 	app.Put("/v1/users/_current", route.UserController.Update)
 	app.Delete("/v1/users/_current", route.UserController.Delete)
+	app.Get("/v1/users/:user_id", route.UserController.Profile)
 
 	app.Get("/short/:id", route.LinkController.RedirectLink)
 	app.Post("/v1/short", route.LinkController.Create)
+	app.Get("/v1/short/:user_id", route.LinkController.List)
 
 	return app
 }

@@ -17,7 +17,7 @@ func main() {
 	linkRepository := link.NewLinkRepository(db)
 
 	userService := user.NewUserService(userRepository)
-	linkService := link.NewLinkService(linkRepository, userRepository)
+	linkService := link.NewLinkService(linkRepository)
 
 	userController := user.NewUserController(userService)
 	linkController := link.NewLinkController(linkService)

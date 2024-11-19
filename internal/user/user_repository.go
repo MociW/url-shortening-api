@@ -96,3 +96,17 @@ func (r *UserRepository) FindByEmail(ctx context.Context, entity *User, email an
 
 	return tx.Commit().Error
 }
+
+func (r *UserRepository) FindUser(ctx context.Context, entity *User, uuid string) error {
+	tx := r.DB.WithContext(ctx).Begin()
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	if err := tx.Model(&User{}).Preload("Links").Take(&entity, "uuid = ?", uuid).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
+}

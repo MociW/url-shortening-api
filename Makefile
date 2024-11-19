@@ -1,12 +1,12 @@
 #!make
-include *.env
+include config.env
 
 
 migrateup:
-	migrate -path db/migrations -database "mysql://$(USERNAME):$(PASSWORD)@tcp($(HOST):$(DATABASE_PORT))/$(DATABASE)" -verbose up
+	migrate -path db/migrations -database "mysql://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@tcp($(DATABASE_HOST):$(DATABASE_PORT))/$(DATABASE_NAME)" -verbose up
 
 migratedown:
-	migrate -path db/migrations -database "mysql://$(USERNAME):$(PASSWORD)@tcp($(HOST):$(DATABASE_PORT))/$(DATABASE)" -verbose down
+	migrate -path db/migrations -database "mysql://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@tcp($(DATABASE_HOST):$(DATABASE_PORT))/$(DATABASE_NAME)" -verbose down
 
 test:
 	go test -v -cover ./...

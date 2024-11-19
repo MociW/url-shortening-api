@@ -77,3 +77,13 @@ func (u *UserService) Delete(ctx context.Context, request *DeleteUserRequest) er
 
 	return err
 }
+
+func (u *UserService) FindUser(ctx context.Context, request *GetUserRequest) (*UserProfileResponse, error) {
+
+	user := new(User)
+	if err := u.UserRepository.FindUser(ctx, user, request.UUID); err != nil {
+		return nil, fiber.ErrUnauthorized
+	}
+
+	return ConvertUserProfileResponse(user), nil
+}

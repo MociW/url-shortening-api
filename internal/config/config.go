@@ -1,3 +1,5 @@
 package config
 
-const Salt = "all of this will make sense"
+import "github.com/spf13/viper"
+
+var Salt = viper.GetString("JWT_SALT")

@@ -3,19 +3,18 @@ package link
 import (
 	"context"
 	"fmt"
+	"log"
 	"url-shortening-api/internal/helper"
-	"url-shortening-api/internal/user"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type LinkService struct {
 	LinkRepository *LinkRepository
-	UserRepository *user.UserRepository
 }
 
-func NewLinkService(linkRepository *LinkRepository, userRepository *user.UserRepository) *LinkService {
-	return &LinkService{LinkRepository: linkRepository, UserRepository: userRepository}
+func NewLinkService(linkRepository *LinkRepository) *LinkService {
+	return &LinkService{LinkRepository: linkRepository}
 }
 
 func (l *LinkService) Create(ctx context.Context, request *CreateLinkRequest) (*LinkResponse, error) {
@@ -52,6 +51,7 @@ func (l *LinkService) Get(ctx context.Context, request *GetLinkRequest) (*LinkRe
 func (l *LinkService) List(ctx context.Context, request *ListLinkRequest) ([]LinkResponse, error) {
 
 	links, err := l.LinkRepository.ListByUUID(ctx, request.UserId)
+	log.Println(links)
 	if err != nil {
 		return nil, fiber.ErrInternalServerError
 	}

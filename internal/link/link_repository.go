@@ -69,7 +69,7 @@ func (r *LinkRepository) ListByUUID(ctx context.Context, id string) ([]Link, err
 		return nil, tx.Error
 	}
 
-	if err := tx.Where("user_id = ?", id).Take(&Links).Error; err != nil {
+	if err := tx.Where("user_id = ?", id).Find(&Links).Error; err != nil {
 		tx.Rollback()
 		return nil, err
 	}

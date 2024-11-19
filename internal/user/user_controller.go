@@ -137,12 +137,13 @@ func (u *UserController) Delete(c *fiber.Ctx) error {
 
 	claims, ok := token.Claims.(*jwt.MapClaims)
 	if !ok {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Failed to parse claims",
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Unauthorized",
 		})
 	}
 
-	if (*claims)["email"].(string) != request.Email {
+	if (*claims)["id"].(string) != request.UUID {
+		fmt.Println((*claims)["id"].(string))
 		return fiber.ErrBadRequest
 	}
 
@@ -152,4 +153,39 @@ func (u *UserController) Delete(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
 		"message": "Delete User Successfully",
 	})
+}
+
+func (u *UserController) Profile(c *fiber.Ctx) error {
+	request := new(GetUserRequest)
+	id := c.Params("user_id")
+	request.UUID = id
+
+	cookie := c.Cookies("jwt")
+	token, err := jwt.ParseWithClaims(cookie, &jwt.MapClaims{}, func(t *jwt.Token) (interface{}, error) {
+		return []byte(config.Salt), nil
+	})
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Unauthorized",
+		})
+	}
+
+	claims, ok := token.Claims.(*jwt.MapClaims)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Unauthorized!!",
+		})
+	}
+
+	if (*claims)["id"].(string) != request.UUID {
+		fmt.Println((*claims)["id"].(string))
+		return fiber.ErrBadRequest
+	}
+
+	response, err := u.UserService.FindUser(c.UserContext(), request)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusAccepted).JSON(response)
 }
